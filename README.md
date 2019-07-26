@@ -7,9 +7,9 @@ Bắt đầu xem xét về những hệ thống
 ### 1. Elasticsearch
  Elaticsearch là một công cụ tìm kiếm nguồn mở phân tán dựa trên Apache Lucene và được phát hành theo giấy phép Apache 2.0 (có nghĩa là nó có thể được tải xuống, sử dụng và sửa đổi miễn phí). Nó cung cấp khả năng mở rộng theo chiều ngang, độ tin cậy và khả năng đa nhiệm cho tìm kiếm thời gian thực. Các tính năng tìm kiếm thông tin có sẵn thông qua JSON qua API RESTful. Các khả năng tìm kiếm được hỗ trợ bởi Apache Lucene Engine, không cho phép nó lập chỉ mục động dữ liệu mà không cần biết cấu trúc trước. Elaticsearch có thể đạt được các phản hồi tìm kiếm nhanh vì nó sử dụng lập chỉ mục để tìm kiếm trên các văn bản.
   Nhiều công ty lớn sử dụng Elasticsearch như GitHub, SoundCloud, NetFlix, LinkedIn,.... và các công ty khác. Các ứng dụng chính của Elasticsearch như: 
- • Có thể mở rộng và có tính sẵn sàng cao
- • Nó cung cấp khả năng tìm kiếm và phân tích thời gian thực
- • Nó cung cấp API RESTful để hoạt động để tra cứu, và tính năng khác nhau, chẳng hạn như tìm kiếm đa ngôn ngữ, định vị địa lý, tự động hoàn thành, đề xuất theo ý nghĩa theo ngữ cảnh và đoạn trích kết quả.
+ * Có thể mở rộng và có tính sẵn sàng cao
+ * Nó cung cấp khả năng tìm kiếm và phân tích thời gian thực
+ * Nó cung cấp API RESTful để hoạt động để tra cứu, và tính năng khác nhau, chẳng hạn như tìm kiếm đa ngôn ngữ, định vị địa lý, tự động hoàn thành, đề xuất theo ý nghĩa theo ngữ cảnh và đoạn trích kết quả.
  ### 2. Kibana 
  ### 3. Logstash 
 ## II. Cài đặt ELK Stack 
@@ -39,11 +39,38 @@ Bảng điều khiển động
 Bảng điều khiển rất linh hoạt và năng động vì trực quan hóa cá nhân có thể được sắp xếp dễ dàng theo sự thuận tiện và dữ liệu có thể được làm mới tự động.
 **Giao diện Kibana.** 
 Giao diện Kibana bao gồm bốn tab chính:
-• Discover: Trang Khám phá cho phép tìm kiếm văn bản miễn phí, tìm kiếm dựa trên trường, tìm kiếm dựa trên phạm vi, v.v.
-• Visualize: Trang Visualize cho phép xây dựng nhiều trực quan hóa, chẳng hạn như biểu đồ hình tròn, biểu đồ thanh, biểu đồ đường, v.v., có thể được lưu và sử dụng trong bảng điều khiển sau này.
-• Dashboard: Bảng điều khiển thể hiện các bộ sưu tập nhiều trực quan hóa và tìm kiếm, có thể được sử dụng để dễ dàng áp dụng các bộ lọc dựa trên tương tác nhấp chuột và đưa ra kết luận dựa trên nhiều tập hợp dữ liệu.
+* Discover: Trang Khám phá cho phép tìm kiếm văn bản miễn phí, tìm kiếm dựa trên trường, tìm kiếm dựa trên phạm vi, v.v.
+* Visualize: Trang Visualize cho phép xây dựng nhiều trực quan hóa, chẳng hạn như biểu đồ hình tròn, biểu đồ thanh, biểu đồ đường, v.v., có thể được lưu và sử dụng trong bảng điều khiển sau này.
+* Dashboard: Bảng điều khiển thể hiện các bộ sưu tập nhiều trực quan hóa và tìm kiếm, có thể được sử dụng để dễ dàng áp dụng các bộ lọc dựa trên tương tác nhấp chuột và đưa ra kết luận dựa trên nhiều tập hợp dữ liệu.
 ### 2. Chi tiết hơn về Discover trong giao diện 
-
+#### Discover: Trang Khám phá cho phép tìm kiếm văn bản miễn phí, tìm kiếm dựa trên trường, tìm kiếm dựa trên phạm vi, v.v.
+Ở đây hiển thị tất cả các trường trong Index Pattern ở bên trái, Time Filter ở phía trên, và Query Bar  để nhập truy vấn. Ngoài ra có biểu đồ mặc định dựa trên giá trị @timestamp và hiển thị số lần truy cập tài liệu tương ứng với truy vấn. 
+Mặc định sẽ hiển thị 500 document mới nhất dựa trên thời gian ở góc trên bên phải 
+ * Time Filter là câu trả lời cho các loại tìm kiếm này. Bạn có thể lọc dữ liệu trên bất kỳ khoảng thời gian cụ thể nào được chọn từ lịch, được gọi là **Absolute hoặc** làm cho nó **Relative** dựa trên thời gian hiện tại. Ngoài ra còn có một số bộ lọc thời gian nhanh chóng có sẵn để sử dụng.
+ * Truy vấn: 
+   **Tìm kiếm freetext** nhằm mục đích lọc các tài liệu có chứa cụm từ tìm kiếm. Nó tìm kiếm trong tất cả các tài liệu cho tất cả các trường có chứa thuật ngữ tìm kiếm.
+ Các tìm kiếm Boolean có thể được thực hiện theo các thuật ngữ sau:
+**AND**
+  "Learning" AND "ELK"
+Truy vấn trước sẽ tìm kiếm tất cả các tài liệu có chứa cả hai thuật ngữ:
+"Learning" và "ELK"
+**OR**
+"Logstash" OR "ELK"
+Truy vấn trước sẽ tìm kiếm tất cả các tài liệu có chứa 1 trong 2 thuật ngữ:
+"Logstash" hoặc "ELK".
+**NOT**
+"Logstash" NOT "ELK"
+Truy vấn trước sẽ tìm kiếm tất cả các tài liệu chứa thuật ngữ logstash chứ không phải  thuật ngữ ELK:
+**Groupings**
+("Logstash" OR "ELK") AND "Kibana"
+Truy vấn trước sẽ tìm kiếm các tài liệu có chứa "Kibana" và có thể chứa "ELK" hoặc "Logstash".
+   **Tìm kiếm ký tự đại diện**
+Bạn cũng có thể thực hiện tìm kiếm ký tự đại diện bằng các thuật ngữ sau:
+* plan *: sẽ tìm kiếm tất cả các tài liệu có các điều khoản, chẳng hạn như plant, planting,v.v.
+* plan? : sẽ tìm kiếm plant hoặc plans.
+* ? and *: không thể được sử dụng làm ký tự đầu tiên trong tìm kiếm
+   **Tìm kiếm theo trường.**
+Tìm kiếm trường nhằm tìm kiếm các giá trị cụ thể hoặc phạm vi giá trị cho các trường trong tài liệu được lập chỉ mục của bạn hiển thị ở phía bên trái của trang **Discover.**
 ### 3. Visualize
 ### 4. Dashboard 
 ### 5. Logs
