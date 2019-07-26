@@ -1,4 +1,4 @@
-# TÌM HIỂU CHUYÊN SÂU VỀ ELK
+# TÌM HIỂU VỀ ELK
 ##I. Tổng quan
 Nền tảng ELK là một giải pháp phân tích log hoàn chỉnh, được xây dựng trên sự kết hợp của ba công cụ nguồn mở - Elaticsearch, Logstash và Kibana. Nó cố gắng giải quyết tất cả các vấn đề và thách thức mà chúng ta đã thấy trong phần trước. ELK sử dụng ngăn xếp mã nguồn mở của Elaticsearch để tìm kiếm sâu và phân tích dữ liệu; Đăng nhập để quản lý ghi nhật ký tập trung, bao gồm vận chuyển và chuyển tiếp log từ nhiều máy chủ, làm đầy log và phân tích cú pháp; và cuối cùng, Kibana cho trực quan hóa dữ liệu mạnh mẽ và đẹp mắt. ELK stack hiện đang được duy trì và hỗ trợ tích cực bởi công ty có tên là Elastic (trước đây là Elaticsearch).
   
@@ -18,10 +18,13 @@ Bắt đầu xem xét về những hệ thống
    Sau khi cài đặt xong, chạy lệnh: *$ java -version*
 ### 1. Cài đặt Elasticsearch 
  Để bắt đầu, hãy chạy lệnh sau để nhập khóa GPG công khai của Elaticsearch vào APT:
+
   *$ wget -qO - https://artifacts.elastic.co/GPG-KEY-elasticsearch | sudo apt-key add -*
   Tiếp theo, thêm danh sách nguồn Elastic vào thư mục **sources.list.d**.
+
   *$ echo "deb https://artifacts.elastic.co/packages/6.x/apt stable main" | sudo tee -a /etc/apt/sources.list.d/elastic-6.x.list*
   Tiếp theo, cập nhật danh sách gói của bạn để APT sẽ đọc nguồn Elastic mới:
+
   *$ sudo apt-get update*
   Sau đó tiến hành cài đặt Elasticsearch: *$ sudo apt-get install elasticsearch*
   Sau khi hoàn tất việc cài Elasticsearch, chỉnh sửa file cấu hình của Elasticsearch */etc/elasticsearch/elasticsearch.yml*
@@ -65,7 +68,9 @@ Sau đó kích hoạt và khởi động Kibana
  Vì Kibana được cấu hình để chỉ nghe trên localhost, chúng ta phải thiết lập *reserve proxy* để cho phép truy cập bên ngoài vào nó. Sử dụng Nginx.
  Đầu tiên, sử dụng lệnh *openssl* để tạo người dùng Kibana quản trị mà bạn sẽ sử dụng để truy cập vào giao diện web Kibana. Ví dụ đặt tên tài khoản là **kibanaadmin**.
 Lệnh sau sẽ tạo người dùng và mật khẩu Kibana quản trị và lưu trữ chúng trong tệp *htpasswd.kibana*. Bạn sẽ định cấu hình Nginx để yêu cầu tên người dùng và mật khẩu này và đọc tệp này trong giây lát: 
+
    *echo "kibanaadmin:`openssl passwd abc123`" | sudo tee -a /etc/nginx/htpasswd.kibana*
+   
    Nhập mật khẩu cho tài khoản *kibanaadmin*. 
 ### 3. Cài đặt Logstash
 ### 4. Cài đặt Beat
