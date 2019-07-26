@@ -14,8 +14,59 @@ Bắt đầu xem xét về những hệ thống
  ### 3. Logstash 
 ## II. Cài đặt ELK Stack 
  Trong bài tập lần này em dùng OpenJDK 8 để cài đặt ELK
+   *$ sudo apt-get install openjdk-8-jre*
+   Sau khi cài đặt xong, chạy lệnh: *$ java -version*
 ### 1. Cài đặt Elasticsearch 
+ Để bắt đầu, hãy chạy lệnh sau để nhập khóa GPG công khai của Elaticsearch vào APT:
+  *$ wget -qO - https://artifacts.elastic.co/GPG-KEY-elasticsearch | sudo apt-key add -*
+  Tiếp theo, thêm danh sách nguồn Elastic vào thư mục **sources.list.d**.
+  *$ echo "deb https://artifacts.elastic.co/packages/6.x/apt stable main" | sudo tee -a /etc/apt/sources.list.d/elastic-6.x.list*
+  Tiếp theo, cập nhật danh sách gói của bạn để APT sẽ đọc nguồn Elastic mới:
+  *$ sudo apt-get update*
+  Sau đó tiến hành cài đặt Elasticsearch: *$ sudo apt-get install elasticsearch*
+  Sau khi hoàn tất việc cài Elasticsearch, chỉnh sửa file cấu hình của Elasticsearch */etc/elasticsearch/elasticsearch.yml*
+  Elaticsearch lắng nghe lưu lượng truy cập trên cổng 9200. Bạn sẽ muốn hạn chế quyền truy cập bên ngoài vào đối tượng Elaticsearch của mình để ngăn người ngoài đọc dữ liệu của bạn hoặc tắt Elaticsearch cluster của bạn thông qua API REST. Tìm dòng chỉ định network.host, bỏ ghi chú và thay thế giá trị của nó bằng *localhost*.
+    network.host: *localhost* 
+    network.public_host: *địa chỉ IP* 
+Phần port: 
+http.port: *9200*
+transport.tcp.port: *9300*
+Phần discovery:
+discovery.type: *single-node*
+Lưu và thoát.
+ Khởi động Elasticsearch. $ systemctl start elasticsearch
+Kiểm tra Elasticsearch đã chạy hay chưa bằng cách gửi 1 HTTP request.
+*$ curl -X GET "localhost:9200"*
+   {
+    "name" : "Ge_nH8G",
+    "cluster_name" : "elasticsearch",
+    "cluster_uuid" : "cKUn37uoQAKJWGJJwy41Fw",
+    "version" : {
+      "number" : "6.8.1",
+      "build_flavor" : "default",
+      "build_type" : "deb",
+      "build_hash" : "1fad4e1",
+      "build_date" : "2019-06-18T13:16:52.517138Z",
+      "build_snapshot" : false,
+      "lucene_version" : "7.7.0",
+      "minimum_wire_compatibility_version" : "5.6.0",
+      "minimum_index_compatibility_version" : "5.0.0"
+    },
+    "tagline" : "You Know, for Search"
+  }
+Nếu ra được kết quả như trên thì tiến hành cài Kibana.
 ### 2. Cài đặt Kibana 
+ bạn chỉ nên cài đặt Kibana sau khi cài đặt Elaticsearch. Cài đặt theo thứ tự này đảm bảo rằng các thành phần mỗi sản phẩm phụ thuộc vào đúng vị trí.
+Vì bạn đã thêm nguồn gói Elasticsearch ở bước trước, bạn chỉ có thể cài đặt các thành phần còn lại của Elastic Stack bằng apt:
+  *$ sudo apt-get install kibana*
+Sau đó kích hoạt và khởi động Kibana
+ *$ sudo systemctl enable kibana*
+ *$ sudo systemctl start kibana*
+ Vì Kibana được cấu hình để chỉ nghe trên localhost, chúng ta phải thiết lập *reserve proxy* để cho phép truy cập bên ngoài vào nó. Sử dụng Nginx.
+ Đầu tiên, sử dụng lệnh *openssl* để tạo người dùng Kibana quản trị mà bạn sẽ sử dụng để truy cập vào giao diện web Kibana. Ví dụ đặt tên tài khoản là **kibanaadmin**.
+Lệnh sau sẽ tạo người dùng và mật khẩu Kibana quản trị và lưu trữ chúng trong tệp *htpasswd.kibana*. Bạn sẽ định cấu hình Nginx để yêu cầu tên người dùng và mật khẩu này và đọc tệp này trong giây lát: 
+   *echo "kibanaadmin:`openssl passwd abc123`" | sudo tee -a /etc/nginx/htpasswd.kibana*
+   Nhập mật khẩu cho tài khoản *kibanaadmin*. 
 ### 3. Cài đặt Logstash
 ### 4. Cài đặt Beat
 ## III. Vai trò của Elasticsearch trong ELK
