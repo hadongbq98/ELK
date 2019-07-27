@@ -6,7 +6,10 @@ Nền tảng ELK là một giải pháp phân tích log hoàn chỉnh, được 
 
 ![alt](https://www.netsolutions.com/insights/wp-content/uploads/2017/01/ELK211.jpg)
  **ELK DATA PIPELINE**
+
+
 Bắt đầu xem xét về những hệ thống 
+
 ### 1. Elasticsearch
  Elaticsearch là một công cụ tìm kiếm nguồn mở phân tán dựa trên Apache Lucene và được phát hành theo giấy phép Apache 2.0 (có nghĩa là nó có thể được tải xuống, sử dụng và sửa đổi miễn phí). Nó cung cấp khả năng mở rộng theo chiều ngang, độ tin cậy và khả năng đa nhiệm cho tìm kiếm thời gian thực. Các tính năng tìm kiếm thông tin có sẵn thông qua JSON qua API RESTful. Các khả năng tìm kiếm được hỗ trợ bởi Apache Lucene Engine, không cho phép nó lập chỉ mục động dữ liệu mà không cần biết cấu trúc trước. Elaticsearch có thể đạt được các phản hồi tìm kiếm nhanh vì nó sử dụng lập chỉ mục để tìm kiếm trên các văn bản.
   Nhiều công ty lớn sử dụng Elasticsearch như GitHub, SoundCloud, NetFlix, LinkedIn,.... và các công ty khác. Các ứng dụng chính của Elasticsearch như: 
@@ -253,12 +256,14 @@ Khởi động và enable Filebeat.
   `$ sudo systemctl enable filebeat`
 
 > Nếu bạn đã thiết lập Elastic Stack chính xác, Filebeat sẽ bắt đầu chuyển nhật ký log hệ thống và syslog của bạn tới Logstash, sau đó sẽ tải dữ liệu đó vào Elaticsearch.
+
 Để xác minh rằng Elaticsearch thực sự đang nhận dữ liệu này, hãy truy vấn chỉ mục Filebeat bằng lệnh này:
 
 `$ curl -XGET 'http://localhost:9200/filebeat-*/_search?pretty'`
+
 Sau khi chạy lệnh trên, sẽ hiện ra kết quả tương tự như sau: 
-      ..... 
-     "@version" : "1",
+            ..... 
+    "@version" : "1",
      "host" : {
      "containerized" : false,
      "architecture" : "x86_64",
@@ -348,17 +353,21 @@ Elaticsearch cung cấp một API mở rộng để thực hiện các hoạt đ
   * *OPERATION_NAME*: Điều này tương ứng với tên của hoạt động sẽ được thực hiện, ví dụ: _search, _count, v.v.
   * *QUERY_STRING*: Đây là một tham số tùy chọn được chỉ định cho các tham số chuỗi truy vấn. Ví dụ :? pretty để in các tài liệu JSON.
   * *BODY*: Điều này thực hiện một yêu cầu cho văn bản cơ thể.
-  **Trạng thái của cluster**.
-* **Màu đỏ** biểu thị rằng một số hoặc tất cả các phân đoạn chính chưa sẵn sàng để phục vụ các yêu cầu.
-* **Màu vàng** biểu thị rằng tất cả các phân đoạn chính được phân bổ nhưng một số hoặc tất cả các bản sao chưa được phân bổ. Thông thường, các cụm nút đơn sẽ có trạng thái màu vàng vì không có nút nào khác có sẵn để sao chép.
-* **Màu xanh lá cây** biểu thị rằng tất cả các phân đoạn và bản sao của chúng được phân bổ tốt và cụm hoạt động đầy đủ.
+  
+**Trạng thái của cluster**.
+ * **Màu đỏ** biểu thị rằng một số hoặc tất cả các phân đoạn chính chưa sẵn sàng để phục vụ các yêu cầu.
+ * **Màu vàng** biểu thị rằng tất cả các phân đoạn chính được phân bổ nhưng một số hoặc tất cả các bản sao chưa được phân bổ. Thông thường, các cụm nút đơn sẽ có trạng thái màu vàng vì không có nút nào khác có sẵn để sao chép.
+ * **Màu xanh lá cây** biểu thị rằng tất cả các phân đoạn và bản sao của chúng được phân bổ tốt và cụm hoạt động đầy đủ.
+
 ### 3. Truy vấn Elasticsearch DSL
 Các truy vấn mà chúng tôi thấy cho đến bây giờ là các lệnh cơ bản được sử dụng để truy xuất dữ liệu, nhưng sức mạnh thực sự của truy vấn của Elaticsearch nằm trong **Query Domain Specific Language** dựa trên JSON cũng được gọi là Truy vấn DSL. Kibana sử dụng rộng rãi truy vấn DSL để có kết quả ở định dạng mong muốn cho bạn. Bạn gần như không bao giờ thực sự phải lo lắng về việc viết JSON truy vấn, vì Kibana sẽ tự động tạo và đặt kết quả ở định dạng đẹp.
+
 ## IV. Vai trò của Kibana trong ELK
 Trong phần này, chúng ta sẽ xem Kibana đóng vai trò là đầu mối của ELK, nơi nó che giấu tất cả sự phức tạp của dữ liệu và trình bày các hình ảnh, biểu đồ và bảng điều khiển đẹp mắt được xây dựng trên dữ liệu, giúp hiểu rõ hơn về dữ liệu.
 Kibana giúp dễ dàng tạo và chia sẻ bảng điều khiển bao gồm nhiều loại biểu đồ và đồ thị khác nhau. Trực quan hóa Kibana tự động hiển thị các thay đổi trong dữ liệu theo thời gian dựa trên các truy vấn Elaticsearch. Thật dễ dàng để cài đặt và thiết lập, đồng thời giúp chúng tôi nhanh chóng tìm hiểu và khám phá nhiều khía cạnh của dữ liệu.
 
 ### 1. Các tính năng của Kibana
+
 **Elasticsearch tổng hợp.**
 Chủ yếu có hai loại tổng hợp - Bucketing và Metrics. Bucketing tạo ra một danh sách các nhóm, mỗi nhóm có một bộ tài liệu thuộc về nó, ví dụ: các điều khoản, phạm vi, biểu đồ, v.v. Số liệu tính toán số liệu tính toán cho một tập hợp các tài liệu, ví dụ: min, max, sum, trung bình, v.v. Các loại tính toán này chỉ có thể được thực hiện trên loại trường số.
 
@@ -375,6 +384,10 @@ Giao diện Kibana bao gồm bốn tab chính:
 * Visualize: Trang Visualize cho phép xây dựng nhiều trực quan hóa, chẳng hạn như biểu đồ hình tròn, biểu đồ thanh, biểu đồ đường, v.v., có thể được lưu và sử dụng trong bảng điều khiển sau này.
 * Dashboard: Bảng điều khiển thể hiện các bộ sưu tập nhiều trực quan hóa và tìm kiếm, có thể được sử dụng để dễ dàng áp dụng các bộ lọc dựa trên tương tác nhấp chuột và đưa ra kết luận dựa trên nhiều tập hợp dữ liệu.
 ### 2. Chi tiết hơn về Discover trong giao diện 
+![alt](https://scontent.fhan5-3.fna.fbcdn.net/v/t1.15752-9/67192818_2371365449606379_1490133706436771840_n.png?_nc_cat=106&_nc_oc=AQk70gkmbrZqYP5Q5_ZiNPqogn75yUYujQvcYqimvNTl_cEWsrFMiT5FnadMsQ1w_e8Z-KXXaJa3IefG_lFblOvU&_nc_ht=scontent.fhan5-3.fna&oh=03c79f602816e6b4c9e9a7e2ddfb9165&oe=5DA47100)
+
+### Mục Discover ở máy em 
+
   **Discover** : Trang Khám phá cho phép tìm kiếm văn bản miễn phí, tìm kiếm dựa trên trường, tìm kiếm dựa trên phạm vi, v.v.
 Ở đây hiển thị tất cả các trường trong Index Pattern ở bên trái, Time Filter ở phía trên, và Query Bar  để nhập truy vấn. Ngoài ra có biểu đồ mặc định dựa trên giá trị `@timestamp` và hiển thị số lần truy cập tài liệu tương ứng với truy vấn. 
 Mặc định sẽ hiển thị 500 document mới nhất dựa trên thời gian ở góc trên bên phải 
@@ -383,21 +396,30 @@ Mặc định sẽ hiển thị 500 document mới nhất dựa trên thời gia
  * **Truy vấn**: 
    **Tìm kiếm freetext** nhằm mục đích lọc các tài liệu có chứa cụm từ tìm kiếm. Nó tìm kiếm trong tất cả các tài liệu cho tất cả các trường có chứa thuật ngữ tìm kiếm.
  Các tìm kiếm Boolean có thể được thực hiện theo các thuật ngữ sau:
-**AND**
-  "Learning" AND "ELK"
+ **AND**
+
+"Learning" AND "ELK"
 Truy vấn trước sẽ tìm kiếm tất cả các tài liệu có chứa cả hai thuật ngữ:
 "Learning" và "ELK"
+
 **OR**
+
 "Logstash" OR "ELK"
 Truy vấn trước sẽ tìm kiếm tất cả các tài liệu có chứa 1 trong 2 thuật ngữ:
 "Logstash" hoặc "ELK".
+
 **NOT**
+
 "Logstash" NOT "ELK"
 Truy vấn trước sẽ tìm kiếm tất cả các tài liệu chứa thuật ngữ logstash chứ không phải  thuật ngữ ELK:
+
 **Groupings**
+
 ("Logstash" OR "ELK") AND "Kibana"
 Truy vấn trước sẽ tìm kiếm các tài liệu có chứa "Kibana" và có thể chứa "ELK" hoặc "Logstash".
+
    **Tìm kiếm ký tự đại diện**
+
 Bạn cũng có thể thực hiện tìm kiếm ký tự đại diện bằng các thuật ngữ sau:
 * plan *: sẽ tìm kiếm tất cả các tài liệu có các điều khoản, chẳng hạn như plant, planting,v.v.
 * plan? : sẽ tìm kiếm plant hoặc plans.
@@ -406,9 +428,61 @@ Bạn cũng có thể thực hiện tìm kiếm ký tự đại diện bằng c�
 Tìm kiếm trường nhằm tìm kiếm các giá trị cụ thể hoặc phạm vi giá trị cho các trường trong tài liệu được lập chỉ mục của bạn hiển thị ở phía bên trái của trang **Discover.**
 
 ### 3. Visualize
-### 4. Dashboard 
-### 5. Logs
-### 6. Uptime
-### 7. Monitoring 
+
+![alt](https://scontent.fhan5-6.fna.fbcdn.net/v/t1.15752-9/67967026_462405147941152_2328743530022830080_n.png?_nc_cat=105&_nc_oc=AQlUmH0OuMSbpdWfK4x97i8feUQhPMX89IHJ4Wb0_J2EhzE4SydIYqB3R7fm9Ti7hx5IRFTHORogI3_HgTYJmZ_p&_nc_ht=scontent.fhan5-6.fna&oh=48c1e014d500597d240478b148becdb0&oe=5DA390E0)
+
+Trang Visualize giúp tạo trực quan hóa dưới dạng biểu đồ và biểu đồ. Những hình ảnh này có thể được lưu và xem riêng lẻ hoặc có thể được sử dụng trong nhiều bảng điều khiển, hoạt động như một bộ sưu tập các hình ảnh trực quan.
+
+
+
+Tạo một visualization gồm ba bước trên trang Visualize:
+**1**. Chọn một loại trực quan.
+**2**. Chọn nguồn dữ liệu (từ tìm kiếm mới hoặc tìm kiếm đã lưu).
+**3**. Định cấu hình các tập hợp (số liệu và nhóm) sẽ được sử dụng để hiển thị trên trang Edit.
+   
+ Loại trực quan. (Visualization types)
+Kibana hỗ trợ các loại trực quan: 
+* Area chart
+* Data table
+* Line chart
+* Markdown widget
+* Metric
+* Pie chart
+* Tile map
+* Vertical bar chart
+
+Trước khi chúng tôi bắt đầu xây dựng trực quan hóa các loại khác nhau, chúng ta hãy hiểu một chút về các tập hợp Elaticsearch, tạo thành xương sống của các visualization trong Kibana
+
+### 4. Timelion
+
+Timelion cho phép bạn so sánh, kết hợp và kết hợp các bộ dữ liệu trên nhiều nguồn dữ liệu với một cú pháp biểu thức dễ làm chủ. Hướng dẫn này tập trung vào Elaticsearch, nhưng bạn sẽ nhanh chóng khám phá ra rằng những gì bạn học được ở đây áp dụng cho mọi hỗ trợ Timelion của nguồn dữ liệu.
+![alt](https://scontent.fhan5-5.fna.fbcdn.net/v/t1.15752-9/67207655_2119375551699210_840568418867347456_n.png?_nc_cat=101&_nc_oc=AQmjEhovFNZKk1C7ZAknQralzoMprHf99jutFFinn3pRnfyzi2OrhbOt_XHCVs0tMVGJs9DRddPEc8pxHM7FmBDB&_nc_ht=scontent.fhan5-5.fna&oh=ed8386faa06d752b4651db83858e6258&oe=5DAE88B2)
+
+### 5. Dashboard 
+
+![alt](https://scontent.fhan5-3.fna.fbcdn.net/v/t1.15752-9/67414129_482545312510625_5365385867579883520_n.png?_nc_cat=111&_nc_oc=AQl_YUlZKrGddBAoP70WojoYoh4lhtcwi4jnTV-y7ZjdDSBLAQ7Rh1qd8VSEMDuYJ3hZXGaXfQbF23v3FhxC5ykb&_nc_ht=scontent.fhan5-3.fna&oh=b17b182182473c537bba0de5bffa5d9a&oe=5DAB6BC3)
+
+**Dashboard Kibana** chỉ là một tập hợp các hình ảnh đã lưu hoặc các tìm kiếm đã lưu, có thể được sắp xếp theo bất kỳ thứ tự nào. Hình ảnh có thể được sử dụng trên nhiều bảng điều khiển và các thay đổi sẽ tự động phản ánh đến tất cả chúng. Một bảng điều khiển có thể được lưu và chia sẻ dễ dàng.
+
+Ví dụ:
+![alt](https://scontent.fhan5-5.fna.fbcdn.net/v/t1.15752-9/67954331_357470775188054_4321268735122866176_n.png?_nc_cat=101&_nc_oc=AQm5JasrZrIIVMR0PlmGc3Gn5X2jNxR0b8l-Jwe22lF_hhNi-PaPZ11hGt3WoP35nZ-YMGL3bxVCoYCCatb9G96M&_nc_ht=scontent.fhan5-5.fna&oh=88d86a2a48c695e3f6c5279e93e371ac&oe=5DEB22E3)
+
+**Đây là Syslog Dashboard**
+
+### 6. Logs
+
+Sử dụng Logs UI để khám phá nhật ký cho các máy chủ, thùng chứa và dịch vụ phổ biến. Kibana cung cấp một màn hình nhỏ gọn, giống như bàn điều khiển mà bạn có thể tùy chỉnh.
+
+![alt](https://scontent.fhan5-7.fna.fbcdn.net/v/t1.15752-9/67494532_1337516466453234_1031118005913780224_n.png?_nc_cat=100&_nc_oc=AQmKuiDYsRfR_VGAy7YrDxcO2Z4ecmbPfpEei-98rdt3AfQG1HrJFLEF49rFx9CNLQd3x2V33pv2cKRH0q6T3qol&_nc_ht=scontent.fhan5-7.fna&oh=128e4be9d714fed541fec981c8453a51&oe=5DA6DC83)
+
+Ta có thể cấu hình source (configuration source) bằng cách nhấn vào Default ở góc trên bên phải. Sau đó sẽ hiện ra 1 bảng như sau:
+
+![alt](https://scontent.fhan5-3.fna.fbcdn.net/v/t1.15752-9/67344313_466803347202188_4392033041493524480_n.png?_nc_cat=111&_nc_oc=AQlahgUQV230lH-OMMSPqXG7--tM-lm2CiSpYSumJjzwGeg6CzUJG3QKa6aDKRB4ieqE683v1HrUD37I1-vZjG2g&_nc_ht=scontent.fhan5-3.fna&oh=4537949304b5ead9ac3bff68be5601a4&oe=5DA16550)
+
+ * **Name** : Tên của của configuration source
+ * **Indices** :Các mẫu của các chỉ số elaticsearch để đọc metric và logs từ đâu tới.
+ * **Fields** : Tên của các trường cụ thể trong các chỉ mục cần được biết đến Cơ sở hạ tầng và Logs UIs người dùng để truy vấn và giải thích chính xác dữ liệu.
+### 7. Uptime
+### 8. Monitoring 
 ## V. Logstash trong ELK
 
