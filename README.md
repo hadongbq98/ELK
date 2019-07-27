@@ -262,36 +262,37 @@ Khởi động và enable Filebeat.
 `$ curl -XGET 'http://localhost:9200/filebeat-*/_search?pretty'`
 
 Sau khi chạy lệnh trên, sẽ hiện ra kết quả tương tự như sau: 
-            ..... 
+
+    ..... 
     "@version" : "1",
-     "host" : {
-     "containerized" : false,
-     "architecture" : "x86_64",
-"name" : "ha",
-"os" : {
-"platform" : "ubuntu",
-"version" : "18.04.2 LTS (Bionic Beaver)",
-"family" : "debian",
-"name" : "Ubuntu",
-"codename" : "bionic"
-},
-"id" : "1c6297324fa0437796d5490ffe5db8f8"
-},
-"@timestamp" : "2019-07-18T12:32:29.000Z",
-"tags" : [
-"beats_input_codec_plain_applied"
-   ],
-  "source" : "/var/log/syslog",
-  "log" : {
-  "file" : {
-   "path" : "/var/log/syslog"
-         }
-       }
-      }
+    "host" : {
+    "containerized" : false,
+    "architecture" : "x86_64",
+    "name" : "ha",
+    "os" : {
+    "platform" : "ubuntu",
+    "version" : "18.04.2 LTS (Bionic Beaver)",
+    "family" : "debian",
+    "name" : "Ubuntu",
+    "codename" : "bionic"
+       },
+    "id" : "1c6297324fa0437796d5490ffe5db8f8"
+     },
+    "@timestamp" : "2019-07-18T12:32:29.000Z",
+    "tags" : [
+    "beats_input_codec_plain_applied"
+        ],
+    "source" : "/var/log/syslog",
+    "log" : {
+    "file" : {
+    "path" : "/var/log/syslog"
+            }
+          } 
+        }
+       } 
+      ]
      }
-    ]
-   }
-  }
+    }
 ## III. Vai trò của Elasticsearch trong ELK
 Như đã nói ở mục trước, một số kiến trúc phân tán lớn như GitHub, StackOverflow và Wikipedia sử dụng tìm kiếm toàn văn bản, tìm kiếm có cấu trúc, khả năng phân tích nhanh để đưa ra tìm kiếm phù hợp.
 ### 1. Các khái niệm trong Elasticsearch
@@ -336,10 +337,12 @@ Trong Elasticsearch, nút có 3 vai trò:
 
   * Master node: master node Các nút chủ chịu trách nhiệm quản lý một cụm. Đối với các cụm lớn, nên có ba nút chính chuyên dụng (một chính và hai sao lưu), chỉ hoạt động như các nút chính và không lưu trữ các chỉ mục hoặc thực hiện tìm kiếm. Một nút có thể được cấu hình để trở thành một nút chủ chuyên dụng với cấu hình này trong elasticsearch.yml:
 *node.master =true*
+
 *node.data=false*
   * Routing node or load balancer node: Các nút này không đóng vai trò là nút chính hoặc nút dữ liệu, mà chỉ thực hiện cân bằng tải hoặc định tuyến các yêu cầu tìm kiếm hoặc lập chỉ mục tài liệu cho các nút thích hợp. Điều này rất hữu ích cho các tìm kiếm khối lượng lớn hoặc hoạt động chỉ mục. Một nút có thể được cấu hình để trở thành một nút định tuyến với cấu hình này trong elasticsearch.yml:
-*node.master =false*
-*node.data=false*
+  *node.master =false*
+
+  *node.data=false*
 ### 2. API Elasticsearch
 Trong ELK, mặc dù Logstash và Kibana hoạt động như một giao diện để nói chuyện với các metric của Elaticsearch, nhưng vẫn cần phải hiểu cách Logstash và Kibana sử dụng API của Elaticsearch RESTful để thực hiện các hoạt động khác nhau, như tạo và quản lý các chỉ mục, lưu trữ và truy xuất tài liệu, và hình thành các loại truy vấn tìm kiếm khác nhau xung quanh metric. Nó cũng thường hữu ích để biết cách xóa các chỉ mục.
 Elaticsearch cung cấp một API mở rộng để thực hiện các hoạt động khác nhau. Cú pháp chung của truy vấn cụm từ dòng lệnh như sau:
@@ -483,6 +486,81 @@ Ta có thể cấu hình source (configuration source) bằng cách nhấn vào 
  * **Indices** :Các mẫu của các chỉ số elaticsearch để đọc metric và logs từ đâu tới.
  * **Fields** : Tên của các trường cụ thể trong các chỉ mục cần được biết đến Cơ sở hạ tầng và Logs UIs người dùng để truy vấn và giải thích chính xác dữ liệu.
 ### 7. Uptime
-### 8. Monitoring 
+
+Tổng quan về  Uptime hoạt động nhằm giúp bạn nhanh chóng xác định và chẩn đoán về sự cố ngừng hoạt động và các sự cố kết nối khác trong mạng hoặc môi trường của bạn. Có một lựa chọn phạm vi ngày là toàn bộ cho Uptime UI; bạn có thể sử dụng lựa chọn này để làm nổi bật phạm vi ngày tuyệt đối hoặc tương đối, tương tự như các tính năng khác của Kibana.
+
+![alt](https://scontent.fhan2-4.fna.fbcdn.net/v/t1.15752-9/67218292_736070376826871_157720806950961152_n.png?_nc_cat=105&_nc_eui2=AeFWiWr75dQTohD4wD0lK6ZmYEjVPcJ02SAj6NZw6u6Pa1provfkjHNfDEW4aQoWs7woXfq7vrdY2RT2q5VRqj0AtpEZmXWQSh1N0DNKA_SckQ&_nc_oc=AQkTNaLkcIjb3o0_Ue8U-YyIFL7qht7IlmZWjN7B5K1dlnt7MFU-Y5C_MmxDYKPimQtMnkaFRLreegpS_JkwmJvb&_nc_ht=scontent.fhan2-4.fna&oh=bbe6cb16609611cc21d650ea220e03f6&oe=5DEAB6D0)
+
+**Filter Bar** được thiết kế để cho phép bạn nhanh chóng xem các nhóm màn hình cụ thể hoặc thậm chí một màn hình riêng lẻ, nếu bạn đã xác định nhiều màn hình. Điều khiển này cho phép bạn sử dụng các tùy chọn bộ lọc tự động, cũng như nhập văn bản bộ lọc tùy chỉnh để chọn các màn hình cụ thể theo trường, URL, ID và các thuộc tính khác.
+
+![alt](https://scontent.fhan2-2.fna.fbcdn.net/v/t1.15752-9/67300776_1137120376482558_8921568211133005824_n.png?_nc_cat=111&_nc_eui2=AeH7vyIYSHfKAbFFnq3eM24BPwXy3R3skJbGwUL85EuOG12yJpHGbk9Y1YpB2YZWDeAWrH3bjL_1cWxZmGR6kHCti9QBPf0u-IuPtCSGJ__x4g&_nc_oc=AQlyViGISuTVQLOZUjXWIIfeXds61mxailD3PW9DaNCcMQaTkQw2dp9mBoxtKCJ_f0-y_F9gSj8srLliPgw9I8QA&_nc_ht=scontent.fhan2-2.fna&oh=d6dae4c813dc311d348030e8d9fcda8b&oe=5DDC085C)
+
+**Snapshot view**  Chế độ xem này nhằm nhanh chóng cung cấp cho bạn cảm giác về tình trạng chung của môi trường mà bạn theo dõi hoặc một tập hợp con của các màn hình đó. Tại đây, bạn có thể thấy tổng số màn hình được phát hiện trong phạm vi ngày Thời gian đã chọn. Ngoài tổng số, số lượng màn hình ở trạng thái lên hoặc xuống được hiển thị, dựa trên kiểm tra cuối cùng được báo cáo bởi Heartbeat cho mỗi màn hình.
+  Bên cạnh số đếm, có một biểu đồ hiển thị sự thay đổi theo thời gian trong phạm vi ngày đã chọn.
+
+![alt](https://scontent.fhan2-1.fna.fbcdn.net/v/t1.15752-9/s2048x2048/67387532_1347329138753218_6628602527485001728_n.png?_nc_cat=102&_nc_eui2=AeE03JRmGe2Px9Qe3eXMSGnQrxt2uSqOpbC16OciVhwGfyjch9QACEUbIszN_R8K9z5nVP2iRBm78wldVgX6-xlsySboHb73fKFiHYkTJ6zz6w&_nc_oc=AQm-IHYDjdjPn-GFYQN1NmAEBf_gGaMVpA-syD7sjO0ncpOii1eMjB09kiAMk_Mbvw5oSPFrj-zxf9brvk8iCCew&_nc_ht=scontent.fhan2-1.fna&oh=fe7a4e6237987336f1d94b257e248fd6&oe=5DA7E12E)
+
+**Monitor list** hình hiển thị thông tin ở cấp độ màn hình riêng lẻ. Dữ liệu hiển thị ở đây sẽ hiển thị các màn hình riêng lẻ của bạn và cung cấp nhanh chóng một hình ảnh trực quan sâu hơn cho các máy chủ hoặc điểm cuối.
+ Bảng này bao gồm thông tin như trạng thái gần đây nhất, khi màn hình được kiểm tra lần cuối, ID và URL, địa chỉ IP của nó và một biểu đồ thu nhỏ chuyên dụng hiển thị trạng thái kiểm tra theo thời gian.
+
+![alt](https://scontent.fhan2-2.fna.fbcdn.net/v/t1.15752-9/67726142_437866670401290_561896101590859776_n.png?_nc_cat=111&_nc_eui2=AeFs2EXwxcBl0ao0E_dv4Cfk_S8uP2qR1G2Qei93tJLSINl0vyyO667-ikB_Me8PXJC4KLbs1qIIg5u0w5MIve4ItYLCVMLH98ZvvwS9FPJpzw&_nc_oc=AQn0PjvKOJAmoX7JoVUTYmBi0E4W0JWmqAfW0ClTUzodwYaQcXyo65fewuVWdiQ02ei7Gw0QyC1TvXQk9chnwc0F&_nc_ht=scontent.fhan2-2.fna&oh=a58a1f6c006ba0a9de1995fb1e507633&oe=5DB06571)
+
+**Error list** hiển thị tổng hợp các lỗi mà Heartbeat đã ghi lại. Lỗi được hiển thị theo Loại lỗi, Monitor ID và thông báo. Nhấp vào màn hình ID, ID sẽ đưa bạn đến chế độ xem Màn hình tương ứng, có thể cung cấp cho bạn thông tin phong phú hơn về các điểm dữ liệu riêng lẻ dẫn đến các lỗi được hiển thị.
+
+![alt](https://scontent.fhan2-3.fna.fbcdn.net/v/t1.15752-9/67751308_1128699410649509_8094229957984649216_n.png?_nc_cat=109&_nc_eui2=AeEbhL4b91WMMglhjcLBR3vE7clbFqM3ZdCqELMIfoMp_j-aQGmZokMcPLbS4LZbHbbHWhWYmeUQY4SL2vrY8BN6ao7yHYu7dyzVIezWlYIIzA&_nc_oc=AQkjp1RvviiT6qWCtWzuVQn8H7FARBoqirHa8jNQQN9GdZh5269hg__QCB5HFRXcGa1s_nuPAFuYu4G7DG79H7-C&_nc_ht=scontent.fhan2-3.fna&oh=e856975a8d8d0c55e93619ea74afe776&oe=5DE5C32E)
+
+> Đây là hình ảnh nhận được sau khi nhấp vào 1 monitor.
+
+Các biểu đồ và thông tin trên có ý nghĩa như thế nào. 
+
+   **Trang Monitor** sẽ giúp bạn hiểu rõ hơn về hiệu suất của điểm cuối mạng cụ thể. Bạn sẽ thấy một hình ảnh chi tiết về thời lượng yêu cầu của màn hình theo thời gian, cũng như trạng thái *up/down* theo thời gian.
+
+   **Status bar** hiển thị một bản tóm tắt nhanh chóng các thông tin mới nhât đến màn hình của bạn. Bạn có thể xem trạng thái mới nhất của nó, nhấp vào liên kết để truy cập URL được nhắm mục tiêu, xem thời lượng yêu cầu gần đây nhất của nó và xác định lượng thời gian đã trôi qua kể từ lần kiểm tra cuối cùng.
+    Bạn có thể sử dụng Status bar để có được bản tóm tắt nhanh về hiệu suất hiện tại, ngoài việc đơn giản là biết trạng thái đang *up* hay *down*.
+  
+  **Check history** hiển thị tổng số đếm của màn hình này kiểm tra cho phạm vi ngày đã chọn. Bạn cũng có thể lọc các kiểm tra theo trạng thái để giúp tìm các sự cố gần đây trên cơ sở mỗi lần kiểm tra. Bảng này có thể giúp bạn hiểu rõ hơn về các chi tiết chi tiết hơn về các điểm dữ liệu cá nhân gần đây Heartbeat đang ghi nhật ký về máy chủ hoặc điểm cuối của bạn.
+
+### 8. Dev Tools
+
+  Trang Dev Tools chứa các công cụ phát triển mà bạn có thể sử dụng để tương tác với dữ liệu của mình trong Kibana. Bao gồm: 
+  * **Console** 
+  * **Search Profiler**
+  * **Grok Debugger**
+
+  **Console** Bảng điều khiển cho phép bạn tương tác với API REST của Elaticsearch. 
+
+  > Lưu ý: Bạn không thể tương tác với các điểm cuối API Kibana qua Bảng điều khiển.
+
+   Console có 2 phần chính: 
+   * Editor, nơi bạn soạn các yêu cầu để gửi tới Elaticsearch.
+   * Response pane, hiển thị các phản hồi cho yêu cầu.
+
+  Khi bạn nhập một lệnh trong trình chỉnh sửa, hãy nhấp vào hình tam giác màu xanh lá cây để gửi yêu cầu tới Elaticsearch.
+
+  Bạn có thể chọn nhiều yêu cầu và gửi chúng cùng nhau. Console gửi các yêu cầu tới Elaticsearch từng cái một và hiển thị đầu ra trong response pane. Gửi nhiều yêu cầu sẽ hữu ích hơn khi bạn gỡ lỗi một vấn đề hoặc thử kết hợp truy vấn trong nhiều tình huống.
+
+  **Sử dụng autocomplete**
+
+  Khi gõ một lệnh, Console sẽ đưa ra các đề xuất theo ngữ cảnh. Những đề xuất này có thể giúp bạn khám phá các tham số cho từng API và tăng tốc độ nhập. Để định cấu hình tùy chọn của bạn cho tự động hoàn tất, chọn **Settings**.
+  
+  **Lấy yêu cầu lịch sử** : Console duy trì một danh sách 500 yêu cầu cuối cùng mà Elaticsearch thực hiện thành công. Để xem các yêu cầu gần đây nhất của bạn, nhấp vào Lịch sử. Nếu bạn chọn một yêu cầu và nhấp vào Áp dụng, Kibana sẽ thêm nó vào trình chỉnh sửa ở vị trí con trỏ hiện tại.
+
+  **Search Profiler** 
+   
+  Elaticsearch có API lược tả rất tốt, có thể được sử dụng để kiểm tra và phân tích các truy vấn tìm kiếm của bạn. Tuy nhiên, phản hồi là một blob JSON rất lớn,rất khó để phân tích bằng tay.
+
+  Công cụ Query Profiler có thể chuyển đổi đầu ra JSON này thành một trực quan dễ điều hướng, cho phép bạn chẩn đoán và gỡ lỗi các truy vấn thực hiện kém nhanh hơn nhiều.
+
+  **Grok Debugger** : Grok là một cú pháp khớp mẫu mà bạn có thể sử dụng để phân tích văn bản tùy ý và cấu trúc nó. Grok là hoàn hảo để phân tích nhật ký syslog, apache và các nhật ký máy chủ web khác, nhật ký mysql và nói chung, bất kỳ định dạng nhật ký nào thường được viết cho con người và không tiêu thụ máy tính.
+
+  Các mẫu Grok được hỗ trợ trong bộ xử lý Grok ingest node và bộ lọc Grok Logstash.Bạn có thể xây dựng và gỡ lỗi các mẫu Grok trong công cụ Grok Debugger trong Kibana trước khi bạn sử dụng chúng trong các đường ống xử lý dữ liệu của mình. Vì ingest node và Logstash chia sẻ cùng một thư viện mẫu và triển khai Grok, nên bất kỳ mẫu Grok nào bạn tạo trong Grok Debugger sẽ hoạt động trong nút nhập và Logstash.
+### 9. Monitoring 
+
+Các tính năng giám sát Kibana phục vụ hai mục đích riêng biệt:
+
+Để trực quan hóa dữ liệu giám sát ELK Stack. Bạn có thể xem dữ liệu về trạng thái và hiệu suất cho Elaticsearch, Logstash và Beats trong thời gian thực, cũng như phân tích hiệu suất trong quá khứ.
+Để giám sát chính Kibana và định tuyến dữ liệu đó đến cụm giám sát.
+Nếu bạn cho phép giám sát trên ELK Stack, mỗi nút Elaticsearch, nút Logstash, Kibana và Beat được coi là duy nhất dựa trên UUID liên tục của nó, được ghi vào thư mục path.data khi nút hoặc thể hiện bắt đầu.
+
 ## V. Logstash trong ELK
 
