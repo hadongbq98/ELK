@@ -4,7 +4,8 @@ Nền tảng ELK là một giải pháp phân tích log hoàn chỉnh, được 
   
   Trong một đường ống dữ liệu ELK Stack điển hình, các bản ghi từ nhiều máy chủ ứng dụng được chuyển qua người gửi Logstash đến một bộ chỉ mục Logstash tập trung. Trình lập chỉ mục Logstash sẽ xuất dữ liệu sang cụm Elaticsearch, được Kibana truy vấn để hiển thị trực quan hóa tuyệt vời và xây dựng bảng điều khiển trên log dữ liệu.
 
-![alt](https://www.netsolutions.com/insights/wp-content/uploads/2017/01/ELK211.jpg)
+![alt](https://scontent.fhan1-1.fna.fbcdn.net/v/t1.15752-9/67198642_376213409633574_8090849990521389056_n.png?_nc_cat=108&_nc_oc=AQmNkohnEkHoa6SxtWcwEl1zr57fLHrKuxTQAQiyUUp7aTPvoUvBi29rxeHjf_ymA8Y&_nc_ht=scontent.fhan1-1.fna&oh=fca48c63666eb9a32221c9ae4847f707&oe=5DDBD4A6)
+ 
  **ELK DATA PIPELINE**
 
 
@@ -17,283 +18,46 @@ Bắt đầu xem xét về những hệ thống
  * Nó cung cấp khả năng tìm kiếm và phân tích thời gian thực
  * Nó cung cấp API RESTful để hoạt động để tra cứu, và tính năng khác nhau, chẳng hạn như tìm kiếm đa ngôn ngữ, định vị địa lý, tự động hoàn thành, đề xuất theo ý nghĩa theo ngữ cảnh và đoạn trích kết quả.
  ### 2. Kibana 
- ### 3. Logstash 
-## II. Cài đặt ELK Stack 
- Trong bài tập lần này em dùng OpenJDK 8 để cài đặt ELK
-   `$ sudo apt-get install openjdk-8-jre`
-   Sau khi cài đặt xong, chạy lệnh: `$ java -version`
-### 1. Cài đặt Elasticsearch 
- Để bắt đầu, hãy chạy lệnh sau để nhập khóa GPG công khai của Elaticsearch vào APT:
 
-  `$ wget -qO - https://artifacts.elastic.co/GPG-KEY-elasticsearch | sudo apt-key add -`
-  
-  Tiếp theo, thêm danh sách nguồn Elastic vào thư mục **sources.list.d**.
+Kibana là một nền tảng trực quan hóa dữ liệu được cấp phép Apache 2.0, giúp trực quan hóa mọi loại dữ liệu có cấu trúc và không cấu trúc được lưu trữ trong các chỉ mục của Elaticsearch. Kibana hoàn toàn được viết bằng HTML và JavaScript. Nó sử dụng các khả năng tìm kiếm và lập chỉ mục mạnh mẽ của Elaticsearch được thể hiện thông qua API RESTful của nó để hiển thị đồ họa mạnh mẽ cho người dùng cuối. Từ trí tuệ kinh doanh cơ bản đến gỡ lỗi thời gian thực, Kibana đóng vai trò của mình thông qua việc hiển thị dữ liệu thông qua biểu đồ đẹp, địa mạo, biểu đồ hình tròn, biểu đồ, bảng, v.v.
 
-  `$ echo "deb https://artifacts.elastic.co/packages/6.x/apt stable main" | sudo tee -a /etc/apt/sources.list.d/elastic-6.x.list`
+Kibana giúp dễ dàng hiểu được khối lượng dữ liệu lớn. Giao diện dựa trên trình duyệt đơn giản của nó cho phép bạn nhanh chóng tạo và chia sẻ bảng điều khiển động hiển thị các thay đổi đối với các truy vấn Elaticsearch trong thời gian thực. 
 
-  Tiếp theo, cập nhật danh sách gói của bạn để APT sẽ đọc nguồn Elastic mới:
+  Một số chức năng của Kibana: 
+* Nó cung cấp các phân tích linh hoạt và một nền tảng trực quan hóa cho doanh nghiệp
+Sự thông minh.
+* Nó cung cấp phân tích thời gian thực, tóm tắt, biểu đồ và gỡ lỗi
+khả năng.
+* Nó cung cấp một giao diện trực quan và thân thiện với người dùng, rất cao
+có thể tùy chỉnh thông qua một số tính năng kéo và thả và sắp xếp
+Khi cần thiết.
+* Nó cho phép lưu bảng điều khiển và quản lý nhiều hơn một bảng điều khiển.
+Bảng điều khiển có thể dễ dàng chia sẻ và nhúng trong các hệ thống khác nhau.
+* Nó cho phép chia sẻ ảnh chụp nhanh của log mà bạn đã tìm kiếm thông qua,
+và cô lập nhiều giao dịch có vấn đề.
 
-  `$ sudo apt-get update`
+ ### 3. Logstash
 
-  Sau đó tiến hành cài đặt Elasticsearch: 
+ Logstash là một đường ống dữ liệu giúp thu thập, phân tích, xử lý log được viết bằng java  một lượng lớn dữ liệu và sự kiện có cấu trúc và không cấu trúc được tạo ra trên các hệ thống khác nhau. Nó cung cấp các plugin để kết nối với nhiều loại nguồn và nền tảng đầu vào khác nhau và được thiết kế để xử lý hiệu quả các bản ghi, sự kiện và nguồn dữ liệu phi cấu trúc để phân phối thành nhiều loại đầu ra với việc sử dụng các plugin đầu ra của nó, cụ thể là tệp, đầu ra (như đầu ra trên bảng điều khiển đang chạy Logstash) hoặc Elaticsearch. Mỗi dòng log của logstash được lưu trữ đưới dạng json.
 
-  `$ sudo apt-get install elasticsearch`
+Nó có các tính năng sau: 
 
-  Sau khi hoàn tất việc cài Elasticsearch, chỉnh sửa file cấu hình của Elasticsearch `/etc/elasticsearch/elasticsearch.yml`
-  Elaticsearch lắng nghe lưu lượng truy cập trên cổng 9200. Bạn sẽ muốn hạn chế quyền truy cập bên ngoài vào đối tượng Elaticsearch của mình để ngăn người ngoài đọc dữ liệu của bạn hoặc tắt Elaticsearch cluster của bạn thông qua API REST. Tìm dòng chỉ định network.host, bỏ ghi chú và thay thế giá trị của nó bằng `localhost`.
+* Xử lý dữ liệu tập trung: Logstash giúp xây dựng một đường ống dữ liệu có thể tập trung xử lý dữ liệu. Với việc sử dụng nhiều plugin cho đầu vào và đầu ra, nó có thể chuyển đổi rất nhiều nguồn đầu vào khác nhau thành một định dạng chung.
 
-    network.host: localhost
+* Hỗ trợ cho các định dạng log tùy chỉnh: Log được viết bởi các ứng dụng khác nhau thường có các định dạng cụ thể dành riêng cho ứng dụng. Logstash giúp phân tích cú pháp và xử lý các định dạng tùy chỉnh trên quy mô lớn. Nó cung cấp hỗ trợ để viết các bộ lọc của riêng bạn cho mã thông báo và cũng cung cấp các bộ lọc sẵn sàng sử dụng.
 
-    network.public_host: địa chỉ IP
+* Phát triển plugin: Các plugin tùy chỉnh có thể được phát triển và xuất bản, và
+có rất nhiều plugin được phát triển tùy chỉnh đã có sẵn.
 
-Phần port: 
+Logstash giữ nhiệm vụ rất quan trọng bao gồm 3 giai đoạn trong chuỗi xử lý **ELK pipeline**, tương ứng với 3 module: 
 
-http.port: *9200*
+* **INPUT**: tiếp nhận/thu thập dữ liệu logs event ở dạng thô từ các nguồn khác nhau như file, redis, beat, syslog,....
 
-transport.tcp.port: *9300*
+* **FILTER**: sau khi tiếp nhận dữ liệu sẽ tiến hành thao tác dữ liệu logs event (như thêm, xóa,.. nội dung log) theo cấu hình của quản trị viên để xây dựng lại cấu trúc dữ liệu log event theo ý của mình.
 
-Phần discovery:
+* **OUTPUT**: sau cùng sẽ thực hiện chuyển tiếp dữ liệu logs event về các dịch vụ khác như Elasticsearch tiếp nhận và lưu trữ log.
 
-discovery.type: *single-node*
-
-Lưu và thoát.
- Khởi động Elasticsearch. 
- 
- `$ systemctl start elasticsearch`
-
-Kiểm tra Elasticsearch đã chạy hay chưa bằng cách gửi 1 HTTP request.
-
-`$ curl -X GET "localhost:9200"`
-  
-
-### 2. Cài đặt Kibana 
- bạn chỉ nên cài đặt Kibana sau khi cài đặt Elaticsearch. Cài đặt theo thứ tự này đảm bảo rằng các thành phần mỗi sản phẩm phụ thuộc vào đúng vị trí.
-Vì bạn đã thêm nguồn gói Elasticsearch ở bước trước, bạn chỉ có thể cài đặt các thành phần còn lại của Elastic Stack bằng apt:
-  
-  `$ sudo apt-get install kibana`
-
-Sau đó kích hoạt và khởi động Kibana
-
- `$ sudo systemctl enable kibana`
-
- `$ sudo systemctl start kibana`
-
- Vì Kibana được cấu hình để chỉ nghe trên localhost, chúng ta phải thiết lập `reserve proxy` để cho phép truy cập bên ngoài vào nó. Sử dụng Nginx.(ở đây em dùng Nginx version 1.17.1)
- Đầu tiên, sử dụng lệnh *openssl* để tạo người dùng Kibana quản trị mà bạn sẽ sử dụng để truy cập vào giao diện web Kibana. Ví dụ đặt tên tài khoản là **kibanaadmin**.
-Lệnh sau sẽ tạo người dùng và mật khẩu Kibana quản trị và lưu trữ chúng trong tệp `htpasswd.kibana`. Bạn sẽ định cấu hình Nginx để yêu cầu tên người dùng và mật khẩu này và đọc tệp này trong giây lát: 
-
-   `echo "kibanaadmin:` `openssl passwd abc123` `" | sudo tee -a /etc/nginx/htpasswd.kibana`
-
-   Nhập mật khẩu cho tài khoản *kibanaadmin*. 
-   Tiếp theo, tạo một tệp khối máy chủ Nginx. Ví dụ, đề cập đến tệp này là **example123.com**, mặc dù bạn có thể thấy hữu ích khi đặt cho bạn một tên mô tả hơn. Ví dụ: nếu có bản ghi FQDN và DNS được thiết lập cho máy chủ này, bạn có thể đặt tên tệp này theo tên FQDN của mình:
-
-   `$ sudo vi /etc/nginx/conf.d/default`
-
-   Đảm bảo cập nhật **example123.com** để khớp với FQDN hoặc địa chỉ IP công cộng của máy chủ của bạn. Mã này định cấu hình Nginx để hướng lưu lượng HTTP của máy chủ của bạn đến ứng dụng Kibana, đang lắng nghe trên `localhost: 5601`. Ngoài ra, nó cấu hình Nginx để đọc tệp `*htpasswd.kibana*` và yêu cầu xác thực cơ bản.
-
-   server {
-    listen 80;
-
-    server_name example.com;
-
-    auth_basic "Restricted Access";
-    auth_basic_user_file /etc/nginx/htpasswd.users;
-
-    location / {
-        proxy_pass http://localhost:5601;
-        proxy_http_version 1.1;
-        proxy_set_header Upgrade $http_upgrade;
-        proxy_set_header Connection 'upgrade';
-        proxy_set_header Host $host;
-        proxy_cache_bypass $http_upgrade;
-      }
-    }
-
-Lưu và thoát.
-Kiểm tra cấu hình cài đặt bằng lệnh: `$ nginx -t`
-Không có lỗi thì hiển thị thông báo `syntax is ok`. Nếu chưa thì kiểm tra lại file cấu hình.
-Khởi động lại Nginx: `$ sudo systemctl restart nginx`
-
-Kibana hiện có thể truy cập thông qua FQDN hoặc địa chỉ IP của server Elastic Stack. Bạn có thể kiểm tra trang trạng thái của máy chủ Kibana bằng cách điều hướng đến địa chỉ sau và nhập thông tin đăng nhập của bạn: **http://địa_chỉ_IP/status**
-### 3. Cài đặt Logstash
-Cài đặt Logstash: `$ sudo apt-get install logstash`
-Sau khi cài đặt Logstash, có thể chuyển sang cấu hình nó. Các tệp cấu hình của Logstash được viết theo định dạng JSON và nằm trong thư mục `/etc/logstash/conf.d`. Khi muốn cấu hình nó, sẽ dễ dàng khi hình dung Logstash là một đường dẫn lấy dữ liệu ở một đầu, xử lý nó theo cách này hay cách khác và gửi nó đến đích của nó (trong trường hợp này, đích đến là Elaticsearch). Một đường dẫn Logstash có hai yếu tố bắt buộc, đầu vào và đầu ra, và một yếu tố tùy chọn, bộ lọc. Các plugin đầu vào tiêu thụ dữ liệu từ một nguồn, các plugin bộ lọc xử lý dữ liệu và các plugin đầu ra ghi dữ liệu đến đích.
-
- Tạo 1 file cấu hình là `02-beats-input.conf` để cấu hình Filebeat input:
-`$ sudo vi /etc/logstash/conf.d/02-beats-input.conf `
-Chèn đoạn cấu hình `input` dưới đây vào file cấu hình, để xác định đầu vào sẽ nghe trên cổng TCP `5044 `
-
-    input {
-      beats {
-       port => 5044
-     }
-    }
-
-> **Input plugins**: được sử dụng để cấu hình một tập hợp các sự kiện sẽ được cung cấp cho Logstash.
-
-Lưu cấu hình và tạo file cấu hình `10-syslog-filter.conf` để thêm bộ lọc (filter) vào system logs. 
-`$ sudo vi /etc/logstash/conf.d/10-syslog-filter.conf`
-Thêm vào file đoạn code sau: 
-
-     filter {
-    if [fileset][module] == "system" {
-    if [fileset][name] == "auth" {
-      grok {
-        match => { "message" => ["%{SYSLOGTIMESTAMP:[system][auth][timestamp]} %{SYSLOGHOST:[system][auth][hostname]} sshd(?:\[%{POSINT:[system][auth][pid]}\])?: %{DATA:[system][auth][ssh][event]} %{DATA:[system][auth][ssh][method]} for (invalid user )?%{DATA:[system][auth][user]} from %{IPORHOST:[system][auth][ssh][ip]} port %{NUMBER:[system][auth][ssh][port]} ssh2(: %{GREEDYDATA:[system][auth][ssh][signature]})?",
-                  "%{SYSLOGTIMESTAMP:[system][auth][timestamp]} %{SYSLOGHOST:[system][auth][hostname]} sshd(?:\[%{POSINT:[system][auth][pid]}\])?: %{DATA:[system][auth][ssh][event]} user %{DATA:[system][auth][user]} from %{IPORHOST:[system][auth][ssh][ip]}",
-                  "%{SYSLOGTIMESTAMP:[system][auth][timestamp]} %{SYSLOGHOST:[system][auth][hostname]} sshd(?:\[%{POSINT:[system][auth][pid]}\])?: Did not receive identification string from %{IPORHOST:[system][auth][ssh][dropped_ip]}",
-                  "%{SYSLOGTIMESTAMP:[system][auth][timestamp]} %{SYSLOGHOST:[system][auth][hostname]} sudo(?:\[%{POSINT:[system][auth][pid]}\])?: \s*%{DATA:[system][auth][user]} :( %{DATA:[system][auth][sudo][error]} ;)? TTY=%{DATA:[system][auth][sudo][tty]} ; PWD=%{DATA:[system][auth][sudo][pwd]} ; USER=%{DATA:[system][auth][sudo][user]} ; COMMAND=%{GREEDYDATA:[system][auth][sudo][command]}",
-                  "%{SYSLOGTIMESTAMP:[system][auth][timestamp]} %{SYSLOGHOST:[system][auth][hostname]} groupadd(?:\[%{POSINT:[system][auth][pid]}\])?: new group: name=%{DATA:system.auth.groupadd.name}, GID=%{NUMBER:system.auth.groupadd.gid}",
-                  "%{SYSLOGTIMESTAMP:[system][auth][timestamp]} %{SYSLOGHOST:[system][auth][hostname]} useradd(?:\[%{POSINT:[system][auth][pid]}\])?: new user: name=%{DATA:[system][auth][user][add][name]}, UID=%{NUMBER:[system][auth][user][add][uid]}, GID=%{NUMBER:[system][auth][user][add][gid]}, home=%{DATA:[system][auth][user][add][home]}, shell=%{DATA:[system][auth][user][add][shell]}$",
-                  "%{SYSLOGTIMESTAMP:[system][auth][timestamp]} %{SYSLOGHOST:[system][auth][hostname]} %{DATA:[system][auth][program]}(?:\[%{POSINT:[system][auth][pid]}\])?: %{GREEDYMULTILINE:[system][auth][message]}"] }
-        pattern_definitions => {
-          "GREEDYMULTILINE"=> "(.|\n)*"
-        }
-        remove_field => "message"
-      }
-      date {
-        match => [ "[system][auth][timestamp]", "MMM  d HH:mm:ss", "MMM dd HH:mm:ss" ]
-      }
-      geoip {
-        source => "[system][auth][ssh][ip]"
-        target => "[system][auth][ssh][geoip]"
-      }
-    }
-    else if [fileset][name] == "syslog" {
-      grok {
-        match => { "message" => ["%{SYSLOGTIMESTAMP:[system][syslog][timestamp]} %{SYSLOGHOST:[system][syslog][hostname]} %{DATA:[system][syslog][program]}(?:\[%{POSINT:[system][syslog][pid]}\])?: %{GREEDYMULTILINE:[system][syslog][message]}"] }
-        pattern_definitions => { "GREEDYMULTILINE" => "(.|\n)*" }
-        remove_field => "message"
-      }
-      date {
-        match => [ "[system][syslog][timestamp]", "MMM  d HH:mm:ss", "MMM dd HH:mm:ss" ]
-        }
-      }
-     }
-    }       
-
-> **Chú thích**: Các plugin trong đoạn cấu hình trên có ý nghĩa gì? Ở mục vai trò và chức của Logstash trong ELK em sẽ giải thích. 
-
-Lưu cấu hình và tạo 1 file cấu hình `30-elasticsearch-output.conf`.
- `$ sudo vi /etc/logstash/conf.d/30-elasticsearch-output.conf`
- Chèn đoạn cấu hình output dưới đây vào file. Về cơ bản, đầu ra này cấu hình Logstash để lưu trữ dữ liệu Beats trong Elaticsearch, đang chạy tại `localhost: 9200`, trong một chỉ mục được đặt tên theo Beat được sử dụng.
-
-     output {
-      elasticsearch {
-       hosts => ["localhost:9200"]
-       manage_template => false
-       index => "%{[@metadata][beat]}-%{[@metadata][version]}-%{+YYYY.MM.dd}"
-      }
-     }
-Lưu cấu hình và thoát. Nếu bạn muốn thêm bộ lọc cho các ứng dụng khác sử dụng đầu vào Filebeat, hãy nhớ đặt tên cho các tệp để chúng được sắp xếp giữa đầu vào và cấu hình đầu ra, nghĩa là tên tệp phải bắt đầu bằng số có hai chữ số từ 02 đến 30.
-
-Kiểm tra cấu hình Logstash đã được hay chưa, chạy dòng lệnh sau: 
-`sudo -u logstash /usr/share/logstash/bin/logstash --path.settings /etc/logstash -t`
-Nếu không có lỗi cú pháp gì thì sẽ có thông báo `Configuration OK`, nó sẽ hiện ra 1 khoảng thời gian kiểm tra.
-Khởi động và enable Logstash: 
-`$ sudo systemctl start logstash`
-`$ sudo systemctl enable logstash`
-### 4. Cài đặt Beat
-ELK Stack sử dụng 1 vài phần mềm gửi dữ liệu gọi là Beats để thu thập dữ liệu từ nhiều nguồn khác nhau và gửi về Logstash hoặc Elasticsearch. Có các Beats sẵn có từ Elastic, nhưng ở bài viết này hướng dẫn cài đặt và sử dụng **Filebeat**.
-Tiến hành cài đặt Filebeat: 
-`$ sudo apt-get install filebeat`
-Tiếp theo cấu hình Filebeat kết nối đến Logstash. Cấu hình file `/etc/filebeat/filebeat.yml` như sau: 
- `$ sudo vi /etc/filebeat/filebeat.yml`
- Filebeat hỗ trợ nhiều kết quả output, nhưng bạn sẽ chỉ gửi các sự kiện trực tiếp đến Elaticsearch hoặc Logstash để xử lý bổ sung. Trong hướng dẫn này sử dụng Logstash để thực hiện xử lý bổ sung trên dữ liệu do Filebeat thu thập. Filebeat sẽ không cần gửi bất kỳ dữ liệu nào trực tiếp đến Elaticsearch, vì vậy hãy vô hiệu hóa đầu ra đó. Để làm như vậy, hãy tìm phần `output.elaticsearch` và nhận xét các dòng sau bằng cách đặt trước chúng bằng dấu `#`:
-    ......
-     `#`output.elasticsearch:
-      # Array of hosts to connect to.
-      `#`hosts: ["localhost:9200"]
-.......
-Sau đó, cấu hình phần `output.logstash`. Bỏ ghi chú các dòng output.logstash: và `hosts: ["localhost: 5044"]` bằng cách xóa `#`. Điều này sẽ cấu hình Filebeat để kết nối với Logstash trên máy chủ Elastic Stack tại cổng `5044`, cổng đã chỉ định đầu vào Logstash trước đó:
-     ......
-    output.logstash:
-      #The Logstash hosts
-      hosts: ["localhost:5044"]
-......
- Lưu cấu hình và thoát. Chức năng của Filebeat có thể được mở rộng với các mô-đun Filebeat. Trong hướng dẫn này, chúng tôi sẽ sử dụng mô-đun hệ thống, thu thập và phân tích các bản ghi được tạo bởi dịch vụ ghi log hệ thống của các bản phân phối Linux phổ biến.
-  `$ sudo filebeat modules enable system`
-
-Tiếp theo, tải mẫu chỉ mục vào Elaticsearch. Một chỉ mục Elaticsearch là một tập hợp các tài liệu có các đặc điểm tương tự. Các chỉ mục được xác định bằng một tên, được sử dụng để chỉ các chỉ mục khi thực hiện các hoạt động khác nhau trong đó. Mẫu chỉ mục sẽ được tự động áp dụng khi tạo chỉ mục mới.
-Để tải chỉ mục, sử dụng lệnh sau:
-  `$ sudo filebeat setup --template -E output.logstash.enabled=false -E 'output.elasticsearch.hosts=["localhost:9200"]'`
-
-      Output 
-      Loaded index template
-Nếu không xảy ra lỗi gì thì sẽ hiện ra kết quả như thế này.
-Filebeat được đóng gói với bảng điều khiển Kibana mẫu cho phép bạn hình dung dữ liệu Filebeat trong Kibana. Trước khi bạn có thể sử dụng bảng điều khiển, bạn cần tạo mẫu chỉ mục và tải bảng điều khiển vào Kibana.
-Khi bảng điều khiển tải, Filebeat kết nối với Elaticsearch để kiểm tra thông tin phiên bản. Để tải bảng điều khiển khi Logstash được bật, bạn cần tắt đầu ra Logstash và bật đầu ra Elaticsearch:
-`$ sudo filebeat setup -e -E output.logstash.enabled=false -E output.elasticsearch.hosts=['localhost:9200'] -E setup.kibana.host=localhost:5601`
-
-Bạn sẽ thấy kết quả sau: 
-
-     2019-07-26T19:50:57.047Z	INFO	instance/beat.go:280	Setup Beat: filebeat; Version: 6.8.1
-     2019-07-26T19:50:57.048Z	INFO	elasticsearch/client.go:164	Elasticsearch url: http://localhost:9200
-     2019-07-26T19:50:57.181Z	INFO	[publisher]	pipeline/module.go:110	Beat name: ha
-     2019-07-26T19:50:57.288Z	INFO	elasticsearch/client.go:164	Elasticsearch url: http://localhost:9200
-     2019-07-26T19:50:57.298Z	INFO	elasticsearch/client.go:739	Attempting to connect to Elasticsearch version 6.8.1
-     2019-07-26T19:50:57.349Z	INFO	template/load.go:128	Template already exists and will not be overwritten.
-     2019-07-26T19:50:57.349Z	INFO	instance/beat.go:889	Template successfully loaded.
-     Loaded index template
-     Loading dashboards (Kibana must be running and reachable)
-     2019-07-26T19:50:57.349Z	INFO	elasticsearch/client.go:164	Elasticsearch url: http://localhost:9200
-     2019-07-26T19:50:57.352Z	INFO	elasticsearch/client.go:739	Attempting to connect to Elasticsearch version 6.8.1
-     2019-07-26T19:50:57.407Z	INFO	kibana/client.go:118	Kibana url: http://localhost:5601
-     2019-07-26T19:51:00.072Z	INFO	add_cloud_metadata/add_cloud_metadata.go:340	add_cloud_metadata: hosting provider type not detected.
-     2019-07-26T19:51:34.070Z	INFO	instance/beat.go:736	Kibana dashboards successfully loaded.
-     Loaded dashboards
-     2019-07-26T19:51:34.070Z	INFO	elasticsearch/client.go:164	Elasticsearch url: http://localhost:9200
-     2019-07-26T19:51:34.076Z	INFO	elasticsearch/client.go:739	Attempting to connect to Elasticsearch version 6.8.1
-     2019-07-26T19:51:34.138Z	INFO	kibana/client.go:118	Kibana url: http://localhost:5601
-     2019-07-26T19:51:34.268Z	WARN	fileset/modules.go:388	X-Pack Machine Learning is not enabled
-     2019-07-26T19:51:34.385Z	WARN	fileset/modules.go:388	X-Pack Machine Learning is not enabled
-     2019-07-26T19:51:34.500Z	WARN	fileset/modules.go:388	X-Pack Machine Learning is not enabled
-     2019-07-26T19:51:34.533Z	WARN	fileset/modules.go:388	X-Pack Machine Learning is not enabled
-     2019-07-26T19:51:34.565Z	WARN	fileset/modules.go:388	X-Pack Machine Learning is not enabled
-     Loaded machine learning job configurations
-Khởi động và enable Filebeat. 
-  `$ sudo systemctl start filebeat`
-  `$ sudo systemctl enable filebeat`
-
-> Nếu bạn đã thiết lập Elastic Stack chính xác, Filebeat sẽ bắt đầu chuyển nhật ký log hệ thống và syslog của bạn tới Logstash, sau đó sẽ tải dữ liệu đó vào Elaticsearch.
-
-Để xác minh rằng Elaticsearch thực sự đang nhận dữ liệu này, hãy truy vấn chỉ mục Filebeat bằng lệnh này:
-
-`$ curl -XGET 'http://localhost:9200/filebeat-*/_search?pretty'`
-
-Sau khi chạy lệnh trên, sẽ hiện ra kết quả tương tự như sau: 
-
-    ..... 
-    "@version" : "1",
-    "host" : {
-    "containerized" : false,
-    "architecture" : "x86_64",
-    "name" : "ha",
-    "os" : {
-    "platform" : "ubuntu",
-    "version" : "18.04.2 LTS (Bionic Beaver)",
-    "family" : "debian",
-    "name" : "Ubuntu",
-    "codename" : "bionic"
-       },
-    "id" : "1c6297324fa0437796d5490ffe5db8f8"
-     },
-    "@timestamp" : "2019-07-18T12:32:29.000Z",
-    "tags" : [
-    "beats_input_codec_plain_applied"
-        ],
-    "source" : "/var/log/syslog",
-    "log" : {
-    "file" : {
-    "path" : "/var/log/syslog"
-            }
-          } 
-        }
-       } 
-      ]
-     }
-    }
-## III. Vai trò của Elasticsearch trong ELK
+## II. Vai trò và chức năng của Elasticsearch trong ELK
 Như đã nói ở mục trước, một số kiến trúc phân tán lớn như GitHub, StackOverflow và Wikipedia sử dụng tìm kiếm toàn văn bản, tìm kiếm có cấu trúc, khả năng phân tích nhanh để đưa ra tìm kiếm phù hợp.
 ### 1. Các khái niệm trong Elasticsearch
  * **Index**
@@ -563,4 +327,48 @@ Các tính năng giám sát Kibana phục vụ hai mục đích riêng biệt:
 Nếu bạn cho phép giám sát trên ELK Stack, mỗi nút Elaticsearch, nút Logstash, Kibana và Beat được coi là duy nhất dựa trên UUID liên tục của nó, được ghi vào thư mục path.data khi nút hoặc thể hiện bắt đầu.
 
 ## V. Logstash trong ELK
+Logstash có nhiều plugin để giúp tích hợp nó với nhiều nguồn đầu vào và đầu ra khác nhau.
+ 
+ Tham khảo các plugin của Logstash [tại đây](https://www.elastic.co/guide/en/logstash/master/output-plugins.html)
 
+ ![alt](https://scontent.fhan1-1.fna.fbcdn.net/v/t1.15752-9/67276013_639384169805047_4464807332429168640_n.png?_nc_cat=107&_nc_eui2=AeHpGxvK8IRcdSjA76KUAjQWwQiSVl_BEx1XgMktwW-sXxX7EZBRkSRWltCc0GBhwqEQDFjpYzb8TSiDoXhdMbcmhPeU1SVnBGohQGB3JI-hrQ&_nc_oc=AQn6zh2LHS87YTUjs8fl-fFFeh7AOj5zSJ1k3GK0IyAOCS-j_ca8K3lat7AexXoEAHM&_nc_ht=scontent.fhan1-1.fna&oh=48050f9d8ee795dfa4526a8551a52404&oe=5DA9C270)
+
+Như đã nói ở mục trước, Logstash pipeline gồm 3 giai đoạn là input, filter và output. (input -> filter -> output). Ta sẽ đi vào giai đoạn: 
+
+### INPUT 
+
+ Cấu hình file input xem ở phần cài đặt và cấu hình Logstash, file cấu hình này quy định cơ chế nhận/lấy log vào chương trình Logstash. Ở đây em chỉ dùng plugin beats. Ngoài ra có những plugin:
+
+  * **file**: đọc dữ liệu từ filesystem, giống như lệnh "tail -f" .
+
+  * **syslog**: Logstash tiếp nhận dữ liệu syslog trên cổng 514.  
+  * **redis**: đọc dữ liệu từ redis server, sử dụng 2 cơ chế redis channel và redis lists.
+
+Và các input plugin khác. 
+
+### FILTER
+ Có thể kết hợp **filter** với các điều kiện so sánh nhằm thực hiện 1 số hành động khi 1 sự kiện khớp với các tiêu chí được đề ra. Các filter plugin hữu ích: 
+
+ * **grok**: hiện là 1 plugin filter tốt nhất để phân tích cú pháp dữ liệu không 
+ được cấu trúc văn bản thành dòng có cấu trúc có thể truy vấn được
+ 
+ * **mutate**: thực hiện sự thay đổi trên thông tin sự log như: đổi tên, xóa, thay 
+ thế, tinh chỉnh các trường (field) thông tin log event.
+ 
+ * **drop**: dừng xử lý sự kiện ngay lập tức.
+
+ * **clone**: tạo 1 bản copy của sự kiện.
+
+ * **geoip**: thêm thông tin vị trí địa lý của IP (để hiển thị bản đồ trên **Kibana**)
+
+### OUTPUT
+
+Đây là giai đoạn cuối cùng của Logstash. Một sự kiện có thể đi ra nhiều output khác nhau. 
+
+ * **Elasticsearch**: gửi dữ liệu đến hệ thống Elasticsearch (đầu cuối của hệ thống ELK logging để lưu trữ, tìm kiếm log,..)
+
+ * **file**: để lưu file ra hệ thống. 
+ 
+ * **graphite**: gửi dữ liệu tới graphite, là tool mã nguồn mở hỗ trợ lưu trữ và tạo biểu đồ metric
+ 
+ * **statsd**: gửi dữ liệu dịch vụ đến "statsd.
