@@ -67,7 +67,7 @@ Lệnh sau sẽ tạo người dùng và mật khẩu Kibana quản trị và l�
    Nhập mật khẩu cho tài khoản *kibanaadmin*. 
    Tiếp theo, tạo một tệp khối máy chủ Nginx. Ví dụ, đề cập đến tệp này là **example123.com**, mặc dù bạn có thể thấy hữu ích khi đặt cho bạn một tên mô tả hơn. Ví dụ: nếu có bản ghi FQDN và DNS được thiết lập cho máy chủ này, bạn có thể đặt tên tệp này theo tên FQDN của mình:
 
-   `$ sudo vi /etc/nginx/conf.d/default`
+   `$ sudo vi /etc/nginx/conf.d/default.conf`
 
    Đảm bảo cập nhật **example123.com** để khớp với FQDN hoặc địa chỉ IP công cộng của máy chủ của bạn. Mã này định cấu hình Nginx để hướng lưu lượng HTTP của máy chủ của bạn đến ứng dụng Kibana, đang lắng nghe trên `localhost: 5601`. Ngoài ra, nó cấu hình Nginx để đọc tệp `*htpasswd.kibana*` và yêu cầu xác thực cơ bản.
 
@@ -77,7 +77,7 @@ Lệnh sau sẽ tạo người dùng và mật khẩu Kibana quản trị và l�
     server_name example.com;
 
     auth_basic "Restricted Access";
-    auth_basic_user_file /etc/nginx/htpasswd.users;
+    auth_basic_user_file /etc/nginx/htpasswd.kibana;
 
     location / {
         proxy_pass http://localhost:5601;
