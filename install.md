@@ -1,5 +1,5 @@
 # Cài đặt ELK Stack 
- Trong bài tập lần này em dùng OpenJDK 8 để cài đặt ELK
+ Cài đặt OpenJDK 8 để cài đặt ELK
    `$ sudo apt-get install openjdk-8-jre`
    Sau khi cài đặt xong, chạy lệnh: `$ java -version`
 ### 1. Cài đặt Elasticsearch 
